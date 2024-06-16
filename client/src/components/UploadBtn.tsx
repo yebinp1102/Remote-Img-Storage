@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import useMutation from '../hooks/useMutation';
+import ErrorMsg from './ErrorMsg';
 
 const fileValidation = ['image/jpg', 'image/jpeg', 'image/png'];
 const URL = '/images';
 
-const ErrorMsg = ({children}: {children: string}) => {
-  return <p className='text-red-500'>{children}</p>
+type Props = {
+  setRefetch : React.Dispatch<React.SetStateAction<number>>;
 }
 
-const UploadBtn = () => {
+const UploadBtn = ({setRefetch}: Props) => {
   const {
     mutate: uploadImg,
     isLoading: uploading,
@@ -19,7 +20,6 @@ const UploadBtn = () => {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files !== null) {
       const file = e.target.files[0];
-      console.log(file);
 
       if (!fileValidation.find((type) => type === file.type)) {
         setError('파일의 타입은 jpg, jpeg, png만 허용합니다.');
@@ -30,12 +30,14 @@ const UploadBtn = () => {
       form.append('image', file);
 
       await uploadImg(form);
-      
+      setTimeout(() => {
+        setRefetch((s:number) => s+1);        
+      }, 1000);
     }
   };
 
   return (
-    <div className="flex flex-col items-center mt-10 mb-20 gap-3">
+    <div className="flex flex-col items-center my-10 gap-3">
       <input
         type="file"
         id="uploadFile"

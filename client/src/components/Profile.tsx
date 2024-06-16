@@ -2,7 +2,7 @@ import ProfileImg from '../../public/profile.jpg';
 
 const Profile = () => {
   return (
-    <div className="bg-slate-500 hover:scale-105 transition-all p-8 flex gap-10 items-center rounded-lg shadow-lg ">
+    <div className="bg-slate-500 hover:scale-105 transition-all p-8 flex gap-10 items-center rounded-lg shadow-lg mt-20">
       <div className="w-24 h-24 rounded-full overflow-hidden">
         <img src={ProfileImg} alt="profile_img" className="w-full object-fit" />
       </div>
