@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-const uploadToS3 = require("./s3");
+const {uploadToS3, getUserPresignedUrls} = require("./s3");
 
 const app = express();
 
@@ -33,6 +33,17 @@ app.post("/images", upload.single("image"), (req, res) => {
   
   return res.status(201).json({key});
 });
+
+app.get('/images', async (req, res) => {
+  const userId = req.headers["x-user-id"];
+
+  if(!userId) return res.status(400).json({message: 'Bad Request'});
+
+  const {error, presignedUrls} = await getUserPresignedUrls(userId);
+  if(error) return res.status(500).json({message: error.message});
+
+  return res.status(201).json(presignedUrls);
+})
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT : ${PORT}`);
